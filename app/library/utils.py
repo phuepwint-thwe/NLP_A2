@@ -1,40 +1,32 @@
 import torch
 
-def generate(prompt, max_seq_len, temperature, model, tokenizer, vocab, device):
-    """
-    Generates text based on the given prompt using the LSTM language model.
-
-    Args:
-        prompt (str): Initial text prompt.
-        max_seq_len (int): Maximum length of the generated sequence.
-        temperature (float): Controls randomness in text generation.
-        model (torch.nn.Module): Trained LSTM model.
-        tokenizer (callable): Tokenizer function to split the input.
-        vocab (torchtext.vocab.Vocab): Vocabulary for token-to-index conversion.
-        device (torch.device): Device to run the model on.
-
-    Returns:
-        list: Generated tokens.
-    """
+def generate(prompt, max_seq_len, temperature, model, tokenizer, vocab, device, seed=None):
+    if seed is not None:
+        torch.manual_seed(seed)
     model.eval()
     tokens = tokenizer(prompt)
-    input_ids = [vocab[token] if token in vocab else vocab['<unk>'] for token in tokens]
-    input_tensor = torch.tensor(input_ids).unsqueeze(0).to(device)
-
-    output_tokens = tokens.copy()  # Start with the prompt tokens
+    indices = [vocab[t] for t in tokens]
+    batch_size = 1
+    hidden = model.init_hidden(batch_size, device)
     with torch.no_grad():
-        for _ in range(max_seq_len):
-            logits, _ = model(input_tensor)
-            next_token_logits = logits[:, -1, :] / temperature
-            probabilities = torch.softmax(next_token_logits, dim=-1)
-            next_token_id = torch.multinomial(probabilities, num_samples=1).item()
+        for i in range(max_seq_len):
+            src = torch.LongTensor([indices]).to(device)
+            prediction, hidden = model(src, hidden)
+            
+            #prediction: [batch size, seq len, vocab size]
+            #prediction[:, -1]: [batch size, vocab size] #probability of last vocab
+            
+            probs = torch.softmax(prediction[:, -1] / temperature, dim=-1)  
+            prediction = torch.multinomial(probs, num_samples=1).item()    
+            
+            while prediction == vocab['<unk>']: #if it is unk, we sample again
+                prediction = torch.multinomial(probs, num_samples=1).item()
 
-            if next_token_id == vocab['<eos>']:
+            if prediction == vocab['<eos>']:    #if it is eos, we stop
                 break
 
-            next_token = vocab.lookup_token(next_token_id)
-            output_tokens.append(next_token)
+            indices.append(prediction) #autoregressive, thus output becomes input
 
-            input_tensor = torch.cat([input_tensor, torch.tensor([[next_token_id]], device=device)], dim=1)
-
-    return output_tokens
+    itos = vocab.get_itos()
+    tokens = [itos[i] for i in indices]
+    return tokens

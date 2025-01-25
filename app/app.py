@@ -13,35 +13,37 @@ data = pickle.load(open('models/Data.pkl', 'rb'))
 # Tokenizer
 tokenizer = torchtext.data.utils.get_tokenizer('basic_english')
 
-# Build Vocabulary
-def build_vocab(data):
-    counter = Counter()
-    for line in data:
-        tokens = tokenizer(line)
-        counter.update(tokens)
-    return Vocab(counter, specials=['<unk>', '<pad>', '<bos>', '<eos>'])
-
-vocab = build_vocab(data)
+# Importing training data
+Data = pickle.load(open('./models/Data.pkl', 'rb'))
+vocab_size = Data['vocab_size']
+emb_dim = Data['emb_dim']
+hid_dim = Data['hid_dim']
+num_layers = Data['num_layers']
+dropout_rate = Data['dropout_rate']
+tokenizer = Data['tokenizer']
+vocab = Data['vocab']
 
 # Define Model Arguments
 args = {
     "vocab_size": len(vocab),
-    "embedding_dim": 1024,  # Adjust embedding size
-    "hidden_dim": 1024,    # Hidden layer size
+    "emb_dim": 1024,  # Adjust embedding size
+    "hid_dim": 1024,    # Hidden layer size
     "num_layers": 2,      # Number of LSTM layers
-    "dropout": 0.65,       # Dropout rate
+    "dropout_rate": 0.65,       # Dropout rate
 }
 
 # Initialize Model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+args['vocab_size'] = 8547 # This is the vocab size of the pretrained model
 model = LSTMLanguageModel(**args).to(device)
 
-# Load Pretrained Weights (if available)
-try:
-    model.load_state_dict(torch.load('models/best-val-lstm_lm.pt', map_location=device))
-    st.write("Loaded pretrained model weights successfully!")
-except FileNotFoundError:
-    st.write("Pretrained weights not found. The model is untrained.")
+# # Load Pretrained Weights (if available)
+# try:
+#     model.load_state_dict(torch.load('models/best-val-lstm_lm.pt', map_location=device))
+#     st.write("Loaded pretrained model weights successfully!")
+# except FileNotFoundError:
+#     st.write("Pretrained weights not found. The model is untrained.")
 
 # Streamlit App
 # Streamlit App
