@@ -37,7 +37,7 @@ This project demonstrates the implementation of an LSTM-based text generator. Th
    ```
 
 ## Dataset
-The dataset used is the text of *War and Peace*. You can download it from a public source or provide your own dataset in `.txt` format.
+The dataset used is the text of *War and Peace*. You can download it from a public source(https://www.gutenberg.org/ebooks/search/?query=war+and+peace&submit_search=Go%21).
 - Place the dataset file in the project directory.
 - Update the file path in the code if necessary.
 
@@ -71,12 +71,13 @@ To launch the Streamlit web application:
 - `A2_LSTM_Text_Generator.ipynb`: Notebook for training the LSTM model.
 - `app.py`: Code for the web application.
 - `requirements.txt`: List of dependencies.
-- `war_and_peace.txt`: Sample dataset (if provided).
+- `war_and_peace.txt`: Sample dataset.
 
 ## Example Outputs
 ### Prompt: "What a delightful"
-- **Output 1:** "What a delightful expenditure product defeats arch crafty guiding accurately."
-- **Output 2:** "What a delightful planets interesting enjoying shout antique weep roman lagging pause."
+- **Output 1:** "what a delightful expenditure product defeats arch crafty guiding accurately "either convinces"well" ![Web Application Output](image/1.png)
+- **Output 2:** "what a delightful planets interesting enjoying shout antique weep roman lagging pause tallow dagger emotional aides-de-camp Anatole wineglass crowned "you'll hussar's castle feast" ![Web Application Output](image/2.png)
+- **Output 3:** "what a delightful armchair "his mavra plates expecting miss que o'clock grant changing jostled counted "bolkonski responsible benefit obedience producing wink obligations labels dmi`tri grow transferred prevailed minds "yet dinners cordial ville mantle" ![Web Application Output](image/3.png)
 
 ## Future Improvements
 1. Enhance model coherence through additional fine-tuning.
