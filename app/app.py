@@ -56,12 +56,12 @@ prompt = st.text_input("Enter a prompt:", "")
 # Parameters selection
 temperature = st.selectbox("Select creativity level (temperature):", [0.5, 0.7, 0.75, 0.8, 1.0], index=2)
 max_seq_len = st.selectbox("Select maximum sequence length:", [10,20,30], index=1)
-
+seed = 0
 # Generate button
 if st.button("Generate the text!"):
     if prompt.strip():
         with st.spinner("Generating text..."):
-            generation = generate(prompt.strip(), max_seq_len, temperature, model, tokenizer, vocab, device)
+            generation = generate(prompt.strip(), max_seq_len, temperature, model, tokenizer, vocab, device, seed)
             generated_text = " ".join(generation)
         st.success("Generated Text:")
         st.write(generated_text)

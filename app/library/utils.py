@@ -1,6 +1,6 @@
 import torch
 
-def generate(prompt, max_seq_len, temperature, model, tokenizer, vocab, device, seed=None):
+def generate(prompt, max_seq_len, temperature, model, tokenizer, vocab, device, seed):
     if seed is not None:
         torch.manual_seed(seed)
     model.eval()
