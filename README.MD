@@ -4,6 +4,8 @@
 - Features
 - Installation
 - Dataset
+- Web Application Features
+- Credit
 
 ## Student Information
 - Name : Phue Pwint Thwe
