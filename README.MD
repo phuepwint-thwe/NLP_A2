@@ -1,10 +1,15 @@
 # A2 - LSTM Text Generator
 - Student Information
 - Overview
+- Dataset
+- Model Architecture
+- Hyperparameters
+- Training Process
+- Testing Result
 - Features
 - Installation
-- Dataset
-- Web Application Features
+- Running the Project
+- Example Outputs
 - Credit
 
 ## Student Information
@@ -12,7 +17,42 @@
 - ID : st124784
 
 ## Overview
-This project demonstrates the implementation of an LSTM-based text generator. The model was trained on the *War and Peace* text dataset to generate coherent and contextually relevant text. A web application was developed using Streamlit to allow users to interact with the model.
+This project implements an LSTM-based text generator trained on War and Peace by Leo Tolstoy. The goal is to produce coherent and contextually relevant text continuations for given prompts. A Streamlit-based web application is included for user interaction with the model.
+
+## Dataset
+The dataset used is the text of *War and Peace*. You can download it from a public source(https://www.gutenberg.org/ebooks/search/?query=war+and+peace&submit_search=Go%21). The dataset was processed and split as follows:
+- Training Set: 52,829 rows (80%)
+- Validation Set: 6,604 rows (10%)
+- Test Set: 6,604 rows (10%)
+The text was cleaned by removing unwanted characters and split into sequences of length 50 for training the model. Text is tokenized using the basic_english tokenizer from torchtext. Vocabulary is built using torchtext.vocab.build_vocab_from_iterator. Special tokens like <unk> and <eos> are added.
+
+## Model Architecture
+The LSTM Language Model is a sequential text generation model. Its most critical components are:
+
+- Embedding Layer: Converts tokens into dense vector representations.
+- LSTM Layers: Two-layer LSTM with 1024 hidden units to capture sequential dependencies.
+- Dropout: Applied to avoid overfitting.
+- Fully Connected Layer: Maps hidden states to vocabulary predictions.
+
+## Hyperparameters
+- Vocabulary Size: Derived from the dataset vocabulary.
+- Embedding Dimension: 1024
+- Hidden Dimension: 1024
+- Number of Layers: 2
+- Dropout Rate: 0.65
+- Learning Rate: 1e-3
+- Sequence Length: 50
+- Epochs: 100
+- Gradient Clipping: 0.25
+
+## Training Process
+The model was trained for 100 epochs using the Adam optimizer and a learning rate scheduler to reduce learning rate by a factor of 0.5 if validation loss plateaued. The training process included:
+1. Training Loss: Monitored and minimized using cross-entropy loss. 
+2. Validation Loss: Used to evaluate the model during training.
+3. Saving the Best Model: The model with the lowest validation loss was saved.
+
+## Testing Result
+The best model was evaluated on the test set, achieving a Test Perplexity of 115.468. While the results demonstrate the model's ability to generate coherent text, there is room for improvement, particularly in generating longer sequences.
 
 ## Features
 1. **Train an LSTM Model:**
@@ -36,18 +76,13 @@ This project demonstrates the implementation of an LSTM-based text generator. Th
    pip install -r requirements.txt
    ```
 
-## Dataset
-The dataset used is the text of *War and Peace*. You can download it from a public source(https://www.gutenberg.org/ebooks/search/?query=war+and+peace&submit_search=Go%21).
-- Place the dataset file in the project directory.
-- Update the file path in the code if necessary.
-
 ## Running the Project
 
 ### Train the Model
 The Jupyter notebook provided contains the code for training the LSTM model. To train:
 1. Open the notebook (`A2_LSTM_Text_Generator.ipynb`).
 2. Run all cells to preprocess the dataset and train the model.
-3. Save the trained model.
+3. The trained model will be saved as ./app/models/best-val-lstm_lm.pt.
 
 ### Run the Web Application
 To launch the Streamlit web application:
@@ -75,14 +110,17 @@ To launch the Streamlit web application:
 
 ## Example Outputs
 ### Prompt: "What a delightful"
-- **Output 1:** "what a delightful expenditure product defeats arch crafty guiding accurately "either convinces"well" ![Web Application Output](image/1.png)
-- **Output 2:** "what a delightful planets interesting enjoying shout antique weep roman lagging pause tallow dagger emotional aides-de-camp Anatole wineglass crowned "you'll hussar's castle feast" ![Web Application Output](image/2.png)
-- **Output 3:** "what a delightful armchair "his mavra plates expecting miss que o'clock grant changing jostled counted "bolkonski responsible benefit obedience producing wink obligations labels dmi`tri grow transferred prevailed minds "yet dinners cordial ville mantle" ![Web Application Output](image/3.png)
+The outputs were tested through three different sequence lengths but with the same temperature value. This demonstrates the model's ability to extend the input prompt and generate text with varying levels of detail and complexity:
+1. **Output 1 (Short Sequence)**:
+   - *"What a delightful expenditure product defeats arch crafty guiding accurately either convinces well."*
+   - This output is concise, maintaining a simple structure with a few descriptive terms. The grammar and coherence are acceptable but may benefit from further context. ![Web Application Output](image/1.png)
+2. **Output 2 (Medium Sequence)**:
+   - *"What a delightful planets interesting enjoying shout antique weep roman lagging pause tallow dagger emotional aides-de-camp Anatole wineglass crowned you'll hussar's castle feast."*
+   - This medium-length sequence introduces more diverse vocabulary. It combines random descriptive elements but starts to lose grammatical coherence toward the end. ![Web Application Output](image/2.png)
+3. **Output 3 (Long Sequence)**:
+   - *"What a delightful armchair his mavra plates expecting miss que o'clock grant changing jostled counted bolkonski responsible benefit obedience producing wink obligations labels dmi'tri grow transferred prevailed minds yet dinners cordial ville mantle."*
+   - The longest sequence demonstrates the model's capacity to generate extended text. However, the output becomes increasingly fragmented, introducing unrelated terms and losing coherence as it progresses. This indicates room for improvement in handling longer sequences. ![Web Application Output](image/3.png)
 
-## Future Improvements
-1. Enhance model coherence through additional fine-tuning.
-2. Add support for multiple datasets.
-3. Include metrics for evaluating text quality.
 
 ## Credits
 - Dataset: *War and Peace* by Leo Tolstoy.
