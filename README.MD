@@ -1,16 +1,17 @@
 # A2 - LSTM Text Generator
-- Student Information
-- Overview
-- Dataset
-- Model Architecture
-- Hyperparameters
-- Training Process
-- Testing Result
-- Features
-- Installation
-- Running the Project
-- Example Outputs
-- Credit
+
+- [Student Information](#student-information)
+- [Overview](#overview)
+- [Dataset](#dataset)
+- [Model Architecture](#model-architecture)
+- [Hyperparameters](#hyperparameters)
+- [Training Process](#training-process)
+- [Testing Results](#testing-results)
+- [Features](#features)
+- [Installation](#installation)
+- [Running the Project](#running-the-project)
+- [Example Outputs](#example-outputs)
+- [Credits](#credits)
 
 ## Student Information
 - Name : Phue Pwint Thwe
